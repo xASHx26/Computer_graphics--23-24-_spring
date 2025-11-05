@@ -1,0 +1,443 @@
+#include <iostream>
+#include <GL/gl.h>
+#include <GL/glut.h>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+
+float me = 0.0f;
+float v = 2.8f;
+float e = 0.3f;
+float ma = 1.2f;
+float j = 3.2f;
+float s = 1.5f;
+float u = 0.6f;
+float n = 3.0f;
+float sx =0.0f;
+float sy=0.0f;
+
+float mes = 0.4f;
+float vs = 0.9f;
+float es = 0.9f;
+float mas = 0.4f;
+float js = 3.0f;
+float ss = 2.4f;
+float us = 1.25f;
+float ns = 1.1f;
+
+int st[650][2];
+float zoom=0.01;
+void star() // Star
+{
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glPointSize(0.4);
+    glBegin(GL_POINTS);
+    for (int i = 0; i < 300; i++)
+        {
+        float x = st[i][0];
+        float y = st[i][1];
+        glVertex2f(x, y);
+        }
+    glEnd();
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glPointSize(1.8);
+    glBegin(GL_POINTS);
+    for (int i = 300; i < 450; i++)
+        {
+        float x = st[i][0];
+        float y = st[i][1];
+        glVertex2f(x, y);
+        }
+    glEnd();
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glPointSize(3.1);
+    glBegin(GL_POINTS);
+    for (int i = 450; i < 590; i++)
+        {
+        float x = st[i][0];
+        float y = st[i][1];
+        glVertex2f(x, y);
+        }
+    glEnd();
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glPointSize(2.0);
+    glPushMatrix();
+    glTranslated(sx,sy,0);
+    glBegin(GL_POINTS);
+    for (int i = 590; i < 650; i++)
+        {
+        float x = st[i][0];
+        float y = st[i][1];
+        glVertex2f(x, y);
+        }
+    glEnd();
+    glPopMatrix();
+}
+void drawText(float x, float y, const char* text, float scale) {
+    glPushMatrix();
+    glTranslatef(x, y, 0.0f);
+    glScalef(scale, scale, 1.0f);
+    glRasterPos2f(0.0f, 0.0f);
+
+    for (const char* c = text; *c != '\0'; ++c) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
+    }
+
+    glPopMatrix();
+}
+
+void circle(float radius, float xc, float yc, float r, float g, float b) {
+    glBegin(GL_POLYGON);
+    for(int i=0; i<200; i++) {
+        glColor3f(r,g,b);
+        float pi=3.1416;
+        float A=(i*2*pi)/200;
+        float r=radius;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x+xc,y+yc);
+    }
+    glEnd();
+}
+
+void circle1(float radius, float xc, float yc, float r, float g, float b,float rx,float ry,float s,const char* name) {
+    float x = rx * cos(s);
+    float y = ry * sin(s);
+    glPushMatrix();
+    glTranslatef(x, y, 0.0f);
+    glBegin(GL_POLYGON);
+    for(int i=0; i<200; i++) {
+        glColor3f(r,g,b);
+        float pi=3.1416;
+        float A=(i*2*pi)/200;
+        float r=radius;
+        float xx = r * cos(A);
+        float yy = r * sin(A);
+        glVertex2f(xx+xc,yy+yc);
+    }
+    glEnd();
+    glColor3f(1.0f, 1.0f, 1.0f);
+    drawText(1.5,1.2,name, 5.0f);
+    glPopMatrix();
+}
+
+void ellipse(float radiusX, float radiusY, float xc, float yc, float r, float g, float b) {
+    glBegin(GL_LINE_LOOP);
+    for(int i = 0; i < 200; i++) {
+        glColor3f(r, g, b);
+        float pi = 3.1416;
+        float angle = (i * 2 * pi) / 200;
+        float x = radiusX * cos(angle);
+        float y = radiusY * sin(angle);
+        glVertex2f(x + xc, y + yc);
+    }
+    glEnd();
+}
+void solarSystem()
+{
+    //star();
+    circle(6.0,0.0,0.0,1,1,0); //sun-ID001
+    glColor3f(1.0f, 1.0f, 1.0f);
+    drawText(7.0,-1.0,"SUN", 5.0f);
+
+
+    ellipse(22.36,10.0,0.0,0.0,1,1,1); // Mercury
+    ellipse(28.6531,14.0,0.0,0.0,1,1,1); // Venus
+    ellipse(35,18.0,0.0,0.0,1,1,1); // Earth
+    ellipse(41.328,22.0,0.0,0.0,1,1,1); // Mars
+    ellipse(47.707,27.0,0.0,0.0,1,1,1); // Jupiter
+    ellipse(54.083,34.0,0.0,0.0,1,1,1); // Saturn
+    ellipse(60.465,42.0,0.0,0.0,1,1,1); // Uranus
+    ellipse(66.85,48.0,0.0,0.0,1,1,1); // Neptune
+    circle1(mes,0.0,0.0,0.5,0.5,0.5,22.36,10.0,me,"Mercury"); // ID002
+    circle1(vs,0.0,0.0,0.586,0.41,0.0977,28.6531,14.0,v,"Venus");// ID003
+    circle1(es,0.0,0.0,0.157,0.478,0.722,35,18,e,"Earth"); // ID004
+    circle1(mas,0.0,0.0,1,0,0,41.328,22,ma,"Mars"); // ID005
+    circle1(js,0.0,0,0.6,0.412,0.325,47.707,27,j,"Jupiter"); // ID006
+    circle1(ss,0.0,0,0.5255,0.4667,0.3725,54.083,34,s,"Saturn"); // ID007
+    circle1(us,0.0,0,0,1,1,60.465,42,u,"Uranus"); // ID008
+    circle1(ns,0.0,0,0,0,1,66.85,48,n,"Neptune"); // ID009
+
+    glColor3f(0,1,0);
+    drawText(-95,50,"Press 'D' for Planets Distance from Sun", 100.0f);
+    glColor3f(0,1,0);
+    drawText(-95,45,"Press 'R' for Planets Radius", 100.0f);
+    glColor3f(0,1,0);
+    drawText(-95,-53,"Press 'H' for Home", 100.0f);
+    drawText(-7,-53,"Solar System", 100.0f);
+}
+void solarSystem1()
+{
+    //star();
+    circle(6.0,0.0,0.0,1,1,0); //sun
+    glColor3f(1.0f, 1.0f, 1.0f);
+    drawText(7.0,-1.0,"SUN", 5.0f);
+
+
+    ellipse(22.36,10.0,0.0,0.0,1,1,1); // Mercury
+    ellipse(28.6531,14.0,0.0,0.0,1,1,1); // Venus
+    ellipse(35,18.0,0.0,0.0,1,1,1); // Earth
+    ellipse(41.328,22.0,0.0,0.0,1,1,1); // Mars
+    ellipse(47.707,27.0,0.0,0.0,1,1,1); // Jupiter
+    ellipse(54.083,34.0,0.0,0.0,1,1,1); // Saturn
+    ellipse(60.465,42.0,0.0,0.0,1,1,1); // Uranus
+    ellipse(66.85,48.0,0.0,0.0,1,1,1); // Neptune
+    circle1(mes,0.0,0.0,0.5,0.5,0.5,22.36,10.0,me,"Mercury");
+    circle1(vs,0.0,0.0,0.586,0.41,0.0977,28.6531,14.0,v,"Venus");
+    circle1(es,0.0,0.0,0.157,0.478,0.722,35,18,e,"Earth");
+    circle1(mas,0.0,0.0,1,0,0,41.328,22,ma,"Mars");
+    circle1(js,0.0,0,0.6,0.412,0.325,47.707,27,j,"Jupiter");
+    circle1(ss,0.0,0,0.5255,0.4667,0.3725,54.083,34,s,"Saturn");
+    circle1(us,0.0,0,0,1,1,60.465,42,u,"Uranus");
+    circle1(ns,0.0,0,0,0,1,66.85,48,n,"Neptune");
+}
+void drawScene() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3d(1,1,1);
+    glLoadIdentity();
+    gluOrtho2D(-100,100,-56.18,56.18);
+    glMatrixMode(GL_MODELVIEW);
+    star();
+    glColor3f(0,1,0);
+    drawText(-32,50,"Welcome with joy to uncovering the unknown of our solar family", 100.0f);
+    drawText(-15,10,"Press 'E' for Solar System", 100.0f);
+    drawText(-6,-10,"Instructor", 100.0f);
+    drawText(-13,-13,"Aneem Al Ahsan Rupai", 100.0f);
+    drawText(-6,-30,"Designer", 100.0f);
+    drawText(-16,-34,"Name                            ID", 100.0f);
+    drawText(-26,-38,"Tanbhir Ahamed Shuvo          22-46765-1", 100.0f);
+    drawText(-26,-42,"Shanjid Ahmed Jimmy            22-46730-1", 100.0f);
+    drawText(-26,-46,"Milton Neogi                            22-46432-1", 100.0f);
+    drawText(-26,-50,"M.A Habib Siam                      22-46353-1", 100.0f);
+    glutSwapBuffers();
+}
+void drawScene1() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3d(1,1,1);
+    glLoadIdentity();
+    gluOrtho2D(-100,100,-56.18,56.18);
+    glMatrixMode(GL_MODELVIEW);
+    star();
+    glPushMatrix();
+    glScaled(zoom,zoom,1);
+    if(zoom<1)
+    {
+        solarSystem1();
+    }
+    else
+    {
+        solarSystem();
+    }
+    glPopMatrix();
+    glutSwapBuffers();
+}
+void drawScene2()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3d(1,1,1);
+    glLoadIdentity();
+    gluOrtho2D(-100,100,-56.18,56.18);
+    glMatrixMode(GL_MODELVIEW);
+    star();
+    solarSystem();
+    glColor3f(1,1,1);
+    drawText(55,50,"Distance of the Planets from the Sun:", 100.0f);
+    drawText(65,45,"1. Mercury: 57.9 million km", 100.0f);
+    drawText(65,40,"2. Venus: 108.2 million km", 100.0f);
+    drawText(65,35,"3. Earth: 149.6 million km", 100.0f);
+    drawText(65,30,"4. Mars: 227.9 million km", 100.0f);
+    drawText(65,25,"5. Jupiter: 778.6 million km", 100.0f);
+    drawText(65,20,"6. Saturn: 1.4 billion km", 100.0f);
+    drawText(65,15,"7. Uranus: 2.9 billion km", 100.0f);
+    drawText(65,10,"8. Neptune: 4.5 billion km", 100.0f);
+    glutSwapBuffers();
+}
+void drawScene3()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3d(1,1,1);
+    glLoadIdentity();
+    gluOrtho2D(-100,100,-56.18,56.18);
+    glMatrixMode(GL_MODELVIEW);
+    star();
+    solarSystem();
+    glColor3f(1,1,1);
+    drawText(55,50,"The Approximate Radius of the Planets:", 100.0f);
+    drawText(65,45,"1. Mercury: 2440 km", 100.0f);
+    drawText(65,40,"2. Venus: 6052 km", 100.0f);
+    drawText(65,35,"3. Earth: 6371 km", 100.0f);
+    drawText(65,30,"4. Mars: 3389 km", 100.0f);
+    drawText(65,25,"5. Jupiter: 69911 km", 100.0f);
+    drawText(65,20,"6. Saturn: 58232 km", 100.0f);
+    drawText(65,15,"7. Uranus: 25362 km", 100.0f);
+    drawText(65,10,"8. Neptune: 24622 km", 100.0f);
+
+    glutSwapBuffers();
+}
+void update2(int value)
+{
+    zoom+=0.02f;
+    if(zoom>1) {
+        zoom=1.01;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(20, update2, 0);
+}
+void update1(int value)
+{
+    sx = static_cast<float>((rand() % 200) - 100);
+    sy = static_cast<float>((rand() % 11236) - 5618) / 100.0;
+    glutPostRedisplay();
+    glutTimerFunc(1000, update1, 0);
+}
+void update(int value) {
+    me+=0.02f;
+    if(me>2*3.1416) {
+        me-=2*3.1416;
+    }
+    v+=0.015f;
+    if(v>2*3.1416) {
+        v-=2*3.1416;
+    }
+    e += 0.01f;
+    if(e>2*3.1416) {
+        e-=2*3.1416;
+    }
+    ma+=0.007f;
+    if(ma>2*3.1416) {
+        ma-=2*3.1416;
+    }
+    j+=0.005f;
+    if(j>2*3.1416) {
+        j-=2*3.1416;
+    }
+    s+=0.003f;
+    if(s>2*3.1416) {
+        s-=2*3.1416;
+    }
+    u+=0.0015f;
+    if(u>2*3.1416) {
+        u-=2*3.1416;
+    }
+    n+=0.0005f;
+    if (n>2*3.1416) {
+        n-=2*3.1416;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(20, update, 0);
+}
+void handleKeypress(unsigned char key, int x, int y) {
+	switch (key) {
+case 'E':
+case 'e':
+    mes = 0.4f;
+    vs = 0.9f;
+    es = 0.9f;
+    mas = 0.4f;
+    js = 3.0f;
+    ss = 2.4f;
+    us = 1.25f;
+    ns = 1.1f;
+    zoom=0.01;
+    glutDisplayFunc(drawScene1);
+    break;
+case 'D':
+case 'd':
+    mes = 0.4f;
+    vs = 0.9f;
+    es = 0.9f;
+    mas = 0.4f;
+    js = 3.0f;
+    ss = 2.4f;
+    us = 1.25f;
+    ns = 1.1f;
+    glutDisplayFunc(drawScene2);
+    break;
+case 'R':
+case 'r':
+    mes = 0.4f;
+    vs = 0.9f;
+    es = 0.9f;
+    mas = 0.4f;
+    js = 3.0f;
+    ss = 2.4f;
+    us = 1.25f;
+    ns = 1.1f;
+    glutDisplayFunc(drawScene3);
+    break;
+case 'H':
+case 'h':
+    mes = 0.4f;
+    vs = 0.9f;
+    es = 0.9f;
+    mas = 0.4f;
+    js = 3.0f;
+    ss = 2.4f;
+    us = 1.25f;
+    ns = 1.1f;
+    glutDisplayFunc(drawScene);
+    break;
+case '1':
+    mes = 5.5f;
+    vs =es = mas =js = ss = us = ns = 0.4f;
+    glutDisplayFunc(drawScene2);
+    break;
+case '2':
+    vs = 5.5f;
+    mes =es = mas =js = ss = us = ns = 0.4f;
+    glutDisplayFunc(drawScene2);
+    break;
+case '3':
+    es = 5.5f;
+    vs =mes = mas =js = ss = us = ns = 0.4f;
+    glutDisplayFunc(drawScene2);
+    break;
+case '4':
+    mas = 5.5f;
+    vs =es = mes =js = ss = us = ns = 0.4f;
+    glutDisplayFunc(drawScene2);
+    break;
+case '5':
+    js = 5.5f;
+    vs =es = mas =mes = ss = us = ns = 0.4f;
+    glutDisplayFunc(drawScene2);
+    break;
+case '6':
+    ss = 5.5f;
+    vs =es = mas =js = mes = us = ns = 0.4f;
+    glutDisplayFunc(drawScene2);
+    break;
+case '7':
+    us = 5.5f;
+    vs =es = mas =js = ss = mes = ns = 0.4f;
+    glutDisplayFunc(drawScene2);
+    break;
+case '8':
+    ns = 5.5f;
+    vs =es = mas =js = ss = us = mes = 0.4f;
+    glutDisplayFunc(drawScene2);
+    break;
+
+glutPostRedisplay();
+	}}
+
+int main(int argc, char** argv) {
+    for(int i = 0; i < 650; i++)
+    {
+        float x5 = static_cast<float>(rand() % 200) - 100;
+        float y5 = static_cast<float>(rand() % 200) - 100;
+        st[i][0] = x5;
+        st[i][1] = y5;
+    }
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(1920, 1080);
+    glutCreateWindow("Solar System");
+    glutDisplayFunc(drawScene);
+    glutKeyboardFunc(handleKeypress);
+    glutTimerFunc(20, update, 0);
+    glutTimerFunc(1000, update1, 0);
+    glutTimerFunc(20, update2, 0);
+    glutMainLoop();
+    return 0;
+}
