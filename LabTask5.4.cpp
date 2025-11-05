@@ -1,0 +1,105 @@
+#include <iostream>
+#include<GL/gl.h>
+#include <GL/glut.h>
+#include <windows.h>
+using namespace std;
+
+float _angle1 = 0.0f;
+void drawScene() {
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glLoadIdentity(); //Reset the drawing perspective
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    glBegin(GL_QUADS);
+    glColor3d(1.0, 1.0, 1.0);
+    glVertex2f(-0.2, 0.6);
+    glVertex2f(0.2, 0.6);
+    glVertex2f(0.2, -0.8);
+    glVertex2f(-0.2, -0.8);
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 0.3f, 0.0f);
+    glRotatef(_angle1, 0.0f, 0.0f, 1.0f);
+    glTranslatef(-0.0f, -0.3f, 0.0f);
+    glColor3d(0, 1.0, 0);
+    glBegin(GL_QUADS);
+    glVertex2f(-0.7, -0.1);
+    glVertex2f(-0.6, -0.2);
+    glVertex2f(0.0f, 0.3f);
+    glVertex2f(-0.05, 0.35);
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 0.3f, 0.0f);
+    glRotatef(_angle1, 0.0f, 0.0f, 1.0f);
+    glTranslatef(-0.0f, -0.3f, 0.0f);
+    glBegin(GL_QUADS);
+    glColor3d(0, 1.0, 0);
+    glVertex2f(0.5870301398619, -0.1951939094097);
+    glVertex2f(0.7, -0.1);
+    glVertex2f(0.05, 0.35);
+    glVertex2f(0.0f, 0.3f);
+
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 0.3f, 0.0f);
+    glRotatef(_angle1, 0.0f, 0.0f, 1.0f);
+    glTranslatef(-0.0f, -0.3f, 0.0f);
+    glBegin(GL_POLYGON);
+    glColor3d(0, 1.0, 0);
+    glVertex2f(-0.08, 0.98);
+    glVertex2f(-0.05, 0.35);
+    glVertex2f(0.0f, 0.3f);
+    glVertex2f(0.05, 0.35);
+    glVertex2f(0.08, 0.98);
+
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 0.3f, 0.0f);
+    glRotatef(_angle1, 0.0f, 0.0f, 1.0f);
+    glTranslatef(-0.0f, -0.3f, 0.0f);
+    glBegin(GL_POLYGON);
+    glColor3d(1, .0, 0);
+    glVertex2f(-0.05, 0.35);
+    glVertex2f(0.05, 0.35);
+    glVertex2f(0.05, 0.35);
+
+
+    glEnd();
+    glPopMatrix();
+
+
+    glutSwapBuffers();
+}
+
+void update(int value) {
+
+    _angle1 += 2.0f;
+    if (_angle1 > 360.0)
+    {
+        _angle1 -= 360;
+    }
+    glutPostRedisplay(); //Notify GLUT that the display has changed
+
+    glutTimerFunc(20, update, 0); //Notify GLUT to call update again in 25 milliseconds
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(800, 800);
+    glutCreateWindow("Transformation");
+    glutDisplayFunc(drawScene);
+    glutTimerFunc(20, update, 0); //Add a timer
+    glutMainLoop();
+    return 0;
+}
