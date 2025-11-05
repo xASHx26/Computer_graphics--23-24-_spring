@@ -8,4 +8,8 @@ To open this project in **Visual Studio Code**:
 3. Select the folder **"OpenGL Programming"**.
 4. Once opened, you can explore, edit, and run the project directly.
 
+## Tasks Folder
+The **`tasks`** folder contains all the task files we completed for this course.  
+Each task is documented in a **Word document** describing the work we did.
+
 If you face any issues, feel free to message me on **Microsoft Teams (ID: 22-46353-1)**.
